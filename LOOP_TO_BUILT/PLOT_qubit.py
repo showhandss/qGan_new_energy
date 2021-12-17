@@ -44,9 +44,9 @@ def plot_Relative_Entropy(qgan,epochs):
     plt.ylabel('relative entropy')
     plt.show()
 
-def plot_qgan_CDF(qgan,load_bounds):
+def plot_qgan_CDF(qgan,load_bounds,mean,sigma):
     #繪製結果分布對於目標分布，也就是對數正態分布，的累積分布函數
-    log_normal = np.random.lognormal(mean=1, sigma=1, size=100000)
+    log_normal = np.random.lognormal(mean=mean, sigma=sigma, size=100000)
     log_normal = np.round(log_normal)
     log_normal = log_normal[log_normal <= load_bounds[1]]
     temp = []
@@ -59,7 +59,7 @@ def plot_qgan_CDF(qgan,load_bounds):
     samples_g, prob_g = qgan.generator.get_output(qgan.quantum_instance, shots=10000)
     samples_g = np.array(samples_g)
     samples_g = samples_g.flatten()
-    num_bins = len(prob_g)
+    # num_bins = len(prob_g)
     plt.bar(samples_g,  np.cumsum(prob_g), color='royalblue', width= 0.8, label='simulation')
     plt.plot( np.cumsum(log_normal),'-o', label='log-normal', color='deepskyblue', linewidth=4, markersize=12)
     plt.xticks(np.arange(min(samples_g), max(samples_g)+1, 1.0))

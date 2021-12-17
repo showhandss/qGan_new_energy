@@ -1,6 +1,9 @@
+# LOOP_MAIN_qubit
+# version:0.1.2
 import pandas
 import time
 from scipy.stats import lognorm
+from sklearn.preprocessing import StandardScaler
 import numpy as np
 seed = 83
 np.random.seed = seed
@@ -37,11 +40,12 @@ alpha = 0.05            # 信賴區間
 
 ### 导入数据
 OUTPUT_DATA = []
-data_list = pandas.read_csv("ttt.csv")
+origin_data = pandas.read_csv("ttt.csv", names=["price"])
+scaler = StandardScaler()
+data_list = scaler.fit_transform(origin_data) # 将数据更改使得数据可以被fit
 data_arr = np.array(data_list)
 actual_data = data_arr.astype(float)
-sample = np.log10(actual_data)
-sigma,loc,scale = stats.lognorm.fit(sample)
+sigma,loc,scale = stats.lognorm.fit(actual_data)
 
 # 正规化
 estimated_mu = np.log(scale)
@@ -120,9 +124,9 @@ for qubit_num in range(3,4):
 
         # plot_Relative_Entropy(qgan,epoch)
 
-        # plot_qgan_CDF(qgan,load_bounds)
+        # plot_qgan_CDF(qgan,load_bounds,)
         
-        THIS_DATA.append(result['params_g'])
+        # THIS_DATA.append(result['params_g'])
         THIS_DATA.append(result['loss_d'])
         THIS_DATA.append(result['loss_g'])
         
